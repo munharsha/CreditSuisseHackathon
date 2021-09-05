@@ -15,28 +15,29 @@ public class Calculate {
     public long calculateFees(){
         long fees = 0;
         int workHours = 0;
+        long eightHours = 8 * 60;
         if(startTime.isAfter(endTime)){
             return fees;
         }
         while(startTime.isBefore(endTime)){
-            if(workHours == 8){
+            if(workHours == eightHours){
                 workHours = 0;
-                this.startTime = startTime.plusHours(1);
+                this.startTime = startTime.plusMinutes(1);
             }
             if(startTime.getDayOfWeek() == DayOfWeek.SUNDAY || startTime.getDayOfWeek() == DayOfWeek.SATURDAY){
                 if(startTime.toLocalTime().equals(Robo.extraDayStart) || (startTime.toLocalTime().isBefore(Robo.extraDayStart) && startTime.toLocalTime().isBefore(Robo.extraDayEnd))){
-                    fees += Robo.extraDayPrice * 60;
+                    fees += Robo.extraDayPrice;
                 } else {
-                    fees += Robo.extraNightPrice * 60;
+                    fees += Robo.extraNightPrice;
                 }
-                this.startTime = startTime.plusHours(1);
+                this.startTime = startTime.plusMinutes(1);
             } else {
                 if(startTime.toLocalTime().equals(Robo.standardDayStart) || (startTime.toLocalTime().isBefore(Robo.standardDayStart) && startTime.toLocalTime().isBefore(Robo.standardDayEnd))){
-                    fees += Robo.standardDayPrice * 60;
+                    fees += Robo.standardDayPrice;
                 } else {
-                    fees += Robo.standardNightPrice * 60;
+                    fees += Robo.standardNightPrice;
                 }
-                this.startTime = startTime.plusHours(1);
+                this.startTime = startTime.plusMinutes(1);
             }
             System.out.println(startTime.toString());
         }
