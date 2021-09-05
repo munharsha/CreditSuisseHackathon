@@ -22,24 +22,27 @@ public class Calculate {
         while(startTime.isBefore(endTime)){
             if(workHours == eightHours){
                 workHours = 0;
-                this.startTime = startTime.plusMinutes(1);
-            }
-            if(startTime.getDayOfWeek() == DayOfWeek.SUNDAY || startTime.getDayOfWeek() == DayOfWeek.SATURDAY){
-                if(startTime.toLocalTime().equals(Robo.extraDayStart) || (startTime.toLocalTime().isBefore(Robo.extraDayStart) && startTime.toLocalTime().isBefore(Robo.extraDayEnd))){
-                    fees += Robo.extraDayPrice;
-                } else {
-                    fees += Robo.extraNightPrice;
-                }
-                this.startTime = startTime.plusMinutes(1);
+                this.startTime = startTime.plusMinutes(60);
             } else {
-                if(startTime.toLocalTime().equals(Robo.standardDayStart) || (startTime.toLocalTime().isBefore(Robo.standardDayStart) && startTime.toLocalTime().isBefore(Robo.standardDayEnd))){
-                    fees += Robo.standardDayPrice;
+                if(startTime.getDayOfWeek() == DayOfWeek.SUNDAY || startTime.getDayOfWeek() == DayOfWeek.SATURDAY){
+                    if(startTime.toLocalTime().equals(Robo.extraDayStart) || (startTime.toLocalTime().isAfter(Robo.extraDayStart) && startTime.toLocalTime().isBefore(Robo.extraDayEnd))){
+                        fees += Robo.extraDayPrice;
+                    } else {
+                        fees += Robo.extraNightPrice;
+                    }
+                    this.startTime = startTime.plusMinutes(1);
+                    workHours++;
                 } else {
-                    fees += Robo.standardNightPrice;
+                    if(startTime.toLocalTime().equals(Robo.standardDayStart) || (startTime.toLocalTime().isAfter(Robo.standardDayStart) && startTime.toLocalTime().isBefore(Robo.standardDayEnd))){
+                        fees += Robo.standardDayPrice;
+                    } else {
+                        fees += Robo.standardNightPrice;
+                    }
+                    this.startTime = startTime.plusMinutes(1);
+                    workHours++;
                 }
-                this.startTime = startTime.plusMinutes(1);
+
             }
-            System.out.println(startTime.toString());
         }
         return fees;
     }
