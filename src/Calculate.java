@@ -20,10 +20,14 @@ public class Calculate {
             return fees;
         }
         while(startTime.isBefore(endTime)){
+            // if robot has worked for 8 hours take a break
             if(workHours == eightHours){
                 workHours = 0;
                 this.startTime = startTime.plusMinutes(60);
+
+            // if robot has worked less than 8 hours
             } else {
+                // weekend fees calculations
                 if(startTime.getDayOfWeek() == DayOfWeek.SUNDAY || startTime.getDayOfWeek() == DayOfWeek.SATURDAY){
                     if(startTime.toLocalTime().equals(Robo.extraDayStart) || (startTime.toLocalTime().isAfter(Robo.extraDayStart) && startTime.toLocalTime().isBefore(Robo.extraDayEnd))){
                         fees += Robo.extraDayPrice;
@@ -32,7 +36,9 @@ public class Calculate {
                     }
                     this.startTime = startTime.plusMinutes(1);
                     workHours++;
+
                 } else {
+                    // weekday fee calculations
                     if(startTime.toLocalTime().equals(Robo.standardDayStart) || (startTime.toLocalTime().isAfter(Robo.standardDayStart) && startTime.toLocalTime().isBefore(Robo.standardDayEnd))){
                         fees += Robo.standardDayPrice;
                     } else {
@@ -41,7 +47,6 @@ public class Calculate {
                     this.startTime = startTime.plusMinutes(1);
                     workHours++;
                 }
-
             }
         }
         return fees;
